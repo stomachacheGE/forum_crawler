@@ -8,7 +8,7 @@ import sqlite3
 import os
 
 current_path = os.getcwd()
-database_path = current_path + '/database.db'
+database_path = current_path + '/database_krebs.db'
 
 #print(database_path)
 

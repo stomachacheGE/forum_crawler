@@ -20,8 +20,8 @@ session = Session()
 users = session.query(User).order_by(User.name).all()
 
 print('Found %d users \n' % len(users))
-for user in users:
-    print(user)
+# for user in users:
+#     print(user)
 
 posts = session.query(Post).all()
 print('Found %d posts \n' % len(posts))

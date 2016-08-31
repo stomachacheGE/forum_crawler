@@ -23,6 +23,7 @@ class UserItem(scrapy.Item):
 	profile_url = scrapy.Field()
 	date_joined = scrapy.Field()
 	total_posts = scrapy.Field()
+	forum = scrapy.Field()
 
 class ThreadItem(scrapy.Item):
 	url = scrapy.Field()
@@ -30,6 +31,8 @@ class ThreadItem(scrapy.Item):
 	timestamp = scrapy.Field()
 	title = scrapy.Field()
 	author = scrapy.Field()
+	subforum = scrapy.Field()
+	subforum_url = scrapy.Field()
 
 class PostItem(scrapy.Item):
 	url = scrapy.Field()
@@ -38,3 +41,5 @@ class PostItem(scrapy.Item):
 	thread_url = scrapy.Field()
 	author = scrapy.Field()
 	order_of_reply = scrapy.Field()
+	subforum = scrapy.Field()
+	subforum_url = scrapy.Field()

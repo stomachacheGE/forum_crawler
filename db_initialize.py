@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-engine = create_engine('sqlite:///database.db')
+engine = create_engine('sqlite:///database_krebs.db')
 Base = declarative_base()
 
 class User(Base):
@@ -40,10 +40,12 @@ class Thread(Base):
     timestamp = Column(String)
     title = Column(String)
     posts = relationship('Post', backref='thread')
+    subforum = Column(String)
+    subforum_url = Column(String)
     
     def __repr__(self):
-        return '\nUser: %s \nTime: %s \nTitle: %s \nURL: %s \n%s \n' \
-            % (self.author.name, self.timestamp, str(self.title), self.url, self.body)
+        return '\nTitle: %s \nUser: %s \nTime: %s \nPosts: %d\nURL: %s \n%s \n' \
+            % (str(self.title), self.author.name, self.timestamp, len(self.posts), self.url, self.body)
 
     
 class Post(Base):
@@ -56,6 +58,8 @@ class Post(Base):
     timestamp = Column(String)
     thread_id = Column(Integer, ForeignKey('threads.id'))
     order_of_reply = Column(Integer)
+    subforum = Column(String)
+    subforum_url = Column(String)
     
     def __repr__(self):
         return '\nUser: %s \nTime: %s \nThread: %s \nOrder: %s \nURL: %s \n%s \n' \

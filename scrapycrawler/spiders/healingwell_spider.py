@@ -10,8 +10,9 @@ from scrapycrawler.items import UserItem, PostItem, ThreadItem
 
 class HealingWellSpider(scrapy.Spider):
     name = "healingwell"
+    forum_name = "healing well"
     allowed_domains = ["www.healingwell.com"]
-    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(1,101)]
+    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(1080,1156)]
 
     HEALINGWELL = "http://www.healingwell.com"
 
@@ -44,6 +45,7 @@ class HealingWellSpider(scrapy.Spider):
         thread_author['name'] = posts[0].css('.msgUser a[href]::text').extract_first()
         thread_author['date_joined'] = posts[0].css('.msgUserInfo::text').extract()[0]
         thread_author['total_posts'] = posts[0].css('.msgUserInfo::text').extract()[1]
+        thread_author['forum'] = self.forum_name
         yield thread_author
 
         thread = ThreadItem()
@@ -61,6 +63,7 @@ class HealingWellSpider(scrapy.Spider):
                 post_author['name'] = posts[i].css('.msgUser a[href]::text').extract_first()
                 post_author['date_joined'] = posts[i].css('.msgUserInfo::text').extract()[0]
                 post_author['total_posts'] = posts[i].css('.msgUserInfo::text').extract()[1]
+                post_author['forum'] = self.forum_name
                 yield post_author
 
                 post = PostItem()

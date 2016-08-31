@@ -38,23 +38,46 @@ class ScrapycrawlerPipeline(object):
             #print('Found user %s \n' % item['name'])
             if not self.user_duplicate(item):
                 print('Found new user')
-                new_user = User(name=item['name'], profile_url=item['profile_url'], forum='healing well',
-                                date_joined=item['date_joined'], total_posts=item['total_posts'])
+                if item['forum'] == 'healing well':
+                    new_user = User(name=item['name'], profile_url=item['profile_url'], forum=item['forum'],
+                                    date_joined=item['date_joined'], total_posts=item['total_posts'])
+                elif item['forum'] == 'prostatakrebs':
+                    new_user = User(name=item['name'], profile_url=item['profile_url'], forum=item['forum'])
+                else:
+                    pass
                 self.session.add(new_user)
                 self.session.commit()
         elif item.__class__.__name__ == 'ThreadItem':
-            author = self.session.query(User).filter_by(name=item['author']['name'], forum='healing well').first()
+            author = self.session.query(User).filter_by(name=item['author']['name'], forum=item['author']['forum']).first()
             if not self.thread_duplicate(item):
-                new_thread = Thread(user_id=author.id, title=item['title'], url=item['url'],
-                                  body=item['body'], timestamp=item['timestamp'])
+                if item['author']['forum']== 'healing well':
+                    new_thread = Thread(user_id=author.id, title=item['title'], url=item['url'],
+                                      body=item['body'], timestamp=item['timestamp'])
+                elif item['author']['forum'] == 'prostatakrebs':
+                    new_thread = Thread(user_id=author.id, title=item['title'], url=item['url'],
+                                      body=item['body'], timestamp=item['timestamp'], 
+                                      subforum=item['subforum'], subforum_url=item['subforum_url'])
+                else:
+                    pass
+
                 self.session.add(new_thread)
                 self.session.commit()
         elif item.__class__.__name__ == 'PostItem':
-            author = self.session.query(User).filter_by(name=item['author']['name'], forum='healing well').first()
+            author = self.session.query(User).filter_by(name=item['author']['name'], forum=item['author']['forum']).first()
             thread = self.session.query(Thread).filter_by(url=item['thread_url']).first()
+            print(author.id)
+            print(thread.id)
             if not self.post_duplicate(item, author):
-                new_post = Post(user_id=author.id, thread_id=thread.id, url=item['url'],
-                                body=item['body'], timestamp=item['timestamp'])
+                if item['author']['forum'] == 'healing well':
+                    new_post = Post(user_id=author.id, thread_id=thread.id, url=item['url'],
+                                    body=item['body'], timestamp=item['timestamp'])
+                elif item['author']['forum'] == 'prostatakrebs':
+                    new_post = Post(user_id=author.id, thread_id=thread.id, url=item['url'],
+                                    body=item['body'], timestamp=item['timestamp'], order_of_reply=item['order_of_reply'],
+                                    subforum=item['subforum'], subforum_url=item['subforum_url'])
+                else:
+                    pass
+
                 self.session.add(new_post)
                 self.session.commit()
         else:
@@ -63,7 +86,7 @@ class ScrapycrawlerPipeline(object):
         return item
 
     def user_duplicate(self, user):
-        get_user = self.session.query(User).filter_by(name=user['name'], forum='healing well').first()
+        get_user = self.session.query(User).filter_by(name=user['name'], forum=user['forum']).first()
         return True if get_user else False
 
     def post_duplicate(self, post, author):
