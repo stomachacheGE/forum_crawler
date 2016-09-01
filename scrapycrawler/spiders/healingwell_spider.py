@@ -13,7 +13,7 @@ class HealingWellSpider(scrapy.Spider):
     name = "healingwell"
     forum_name = "healing well"
     allowed_domains = ["www.healingwell.com"]
-    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(1,1158)]
+    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(740,1158)]
 
     HEALINGWELL = "http://www.healingwell.com"
 
@@ -92,6 +92,7 @@ class HealingWellSpider(scrapy.Spider):
                 post_author['name'] = posts[i].css('.msgUser a[href]::text').extract_first()
                 post_author['date_joined'] = self.date_joined_parser(posts[i].css('.msgUserInfo::text').extract()[0])
                 post_author['total_posts'] = self.total_posts_parser(posts[i].css('.msgUserInfo::text').extract()[1])
+                post_author['forum'] = self.forum_name
                 yield post_author
 
                 post = PostItem()
