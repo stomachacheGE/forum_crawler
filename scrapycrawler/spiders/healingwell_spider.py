@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_initialize import *
 from bs4 import BeautifulSoup
+#import html2text as ht
 from datetime import datetime, date, timedelta
 #log.start(loglevel='DEBUG', logstdout=False)
 from scrapycrawler.items import UserItem, PostItem, ThreadItem
@@ -12,7 +13,7 @@ class HealingWellSpider(scrapy.Spider):
     name = "healingwell"
     forum_name = "healing well"
     allowed_domains = ["www.healingwell.com"]
-    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(1080,1156)]
+    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(1,1158)]
 
     HEALINGWELL = "http://www.healingwell.com"
 
@@ -105,9 +106,13 @@ class HealingWellSpider(scrapy.Spider):
     def body_parser(self, body):
         if body.find('<hr class="PostHR">') != -1:
             body = body[:body.find('<hr class="PostHR">')]
+        body = body.replace("<br>","NEWLINE")
         soup = BeautifulSoup(body, 'html.parser')
-        return soup.get_text()
-
+        text = soup.get_text()
+        return text.replace("NEWLINE", "\n")    
+        #for br in soup.find_all("br"):
+        #    br.replace_with("\n")
+        #return soup.get_text()
 
     def date_joined_parser(self, body):
         body = body.replace('\xa0',' ')

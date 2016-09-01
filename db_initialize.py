@@ -8,7 +8,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-engine = create_engine('sqlite:///database_krebs.db')
+engine = create_engine('sqlite:///database.db')
 Base = declarative_base()
 
 class User(Base):
@@ -40,6 +40,7 @@ class Thread(Base):
     timestamp = Column(String)
     title = Column(String)
     posts = relationship('Post', backref='thread')
+    forum = Column(String)
     subforum = Column(String)
     subforum_url = Column(String)
     
@@ -58,6 +59,7 @@ class Post(Base):
     timestamp = Column(String)
     thread_id = Column(Integer, ForeignKey('threads.id'))
     order_of_reply = Column(Integer)
+    forum = Column(String)
     subforum = Column(String)
     subforum_url = Column(String)
     

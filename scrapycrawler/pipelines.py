@@ -52,10 +52,10 @@ class ScrapycrawlerPipeline(object):
             if not self.thread_duplicate(item):
                 if item['author']['forum']== 'healing well':
                     new_thread = Thread(user_id=author.id, title=item['title'], url=item['url'],
-                                      body=item['body'], timestamp=item['timestamp'])
+                                      body=item['body'], timestamp=item['timestamp'], forum=item['author']['forum'])
                 elif item['author']['forum'] == 'prostatakrebs':
                     new_thread = Thread(user_id=author.id, title=item['title'], url=item['url'],
-                                      body=item['body'], timestamp=item['timestamp'], 
+                                      body=item['body'], timestamp=item['timestamp'], forum=item['author']['forum'],
                                       subforum=item['subforum'], subforum_url=item['subforum_url'])
                 else:
                     pass
@@ -70,11 +70,11 @@ class ScrapycrawlerPipeline(object):
             if not self.post_duplicate(item, author):
                 if item['author']['forum'] == 'healing well':
                     new_post = Post(user_id=author.id, thread_id=thread.id, url=item['url'],
-                                    body=item['body'], timestamp=item['timestamp'])
+                                    body=item['body'], timestamp=item['timestamp'], forum=item['author']['forum'],)
                 elif item['author']['forum'] == 'prostatakrebs':
                     new_post = Post(user_id=author.id, thread_id=thread.id, url=item['url'],
                                     body=item['body'], timestamp=item['timestamp'], order_of_reply=item['order_of_reply'],
-                                    subforum=item['subforum'], subforum_url=item['subforum_url'])
+                                    subforum=item['subforum'], subforum_url=item['subforum_url'], forum=item['author']['forum'])
                 else:
                     pass
 
