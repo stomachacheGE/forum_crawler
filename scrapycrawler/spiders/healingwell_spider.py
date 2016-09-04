@@ -13,7 +13,7 @@ class HealingWellSpider(scrapy.Spider):
     name = "healingwell"
     forum_name = "healing well"
     allowed_domains = ["www.healingwell.com"]
-    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(740,1158)]
+    start_urls = ["http://www.healingwell.com/community/?f=35&p=%d" % n for n in range(870,1158)]
 
     HEALINGWELL = "http://www.healingwell.com"
 
@@ -137,10 +137,13 @@ class HealingWellSpider(scrapy.Spider):
             date = [int(x) for x in date]
         time = parts[2].split(':')
         time = [int(x) for x in time]
-        if parts[3] == 'PM':
+        #convert AM/PM to 24 hour
+        if parts[3]=='PM' and 1<=time[0]<=11:
             time[0] += 12
-            if time[0] ==24:
-                time[0] = 0
+        elif parts[3]=='AM' and time[0]==12:
+            time[0] -= 12
+        else:
+            pass
         dtime = datetime(date[2], date[0], date[1], time[0], time[1])
         return dtime.isoformat(sep=' ')
             #yield item
