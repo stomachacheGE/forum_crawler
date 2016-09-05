@@ -2,3 +2,7 @@ database*.db
 .*
 __pycache__/
 */__pychache__/
+*.tex
+*.npy
+*.csv
+*.pdf
