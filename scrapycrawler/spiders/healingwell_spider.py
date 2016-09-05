@@ -53,7 +53,7 @@ class HealingWellSpider(scrapy.Spider):
         thread['url'] = response.url
         thread['title'] = response.css('#PageTitle h1::text').extract_first()
         thread['author'] = thread_author
-        thread['body'] = self.body_parser(posts[0].css('.PostMessageBody').extract_first())
+        thread['body'] = self.body_parser(posts[0].css('.PostBoxWrapper').extract_first())
         thread['timestamp'] = self.time_parser(posts[0].css('.PostThreadInfo ::text').extract_first())
         yield thread
 
@@ -69,7 +69,8 @@ class HealingWellSpider(scrapy.Spider):
 
                 post = PostItem()
                 post['url'] = response.url
-                post['body'] = self.body_parser(posts[i].css('.PostMessageBody').extract_first())
+                #post['body'] = self.body_parser(posts[i].css('.PostMessageBody').extract_first())
+                post['body'] = self.body_parser(posts[i].css('.PostBoxWrapper').extract_first())
                 post['timestamp'] = self.time_parser(posts[i].css('.PostThreadInfo ::text').extract_first())
                 post['thread_url'] = response.url
                 post['author'] = post_author
@@ -97,7 +98,7 @@ class HealingWellSpider(scrapy.Spider):
 
                 post = PostItem()
                 post['url'] = response.url
-                post['body'] = self.body_parser(posts[i].css('.PostMessageBody').extract_first())
+                post['body'] = self.body_parser(posts[i].css('.PostBoxWrapper').extract_first())
                 post['timestamp'] = self.time_parser(posts[i].css('.PostThreadInfo ::text').extract_first())
                 parts = response.url.split('&')
                 post['thread_url'] = parts[0] + '&' + parts[1] 
@@ -105,6 +106,8 @@ class HealingWellSpider(scrapy.Spider):
                 yield post
 
     def body_parser(self, body):
+        if body.find('<div class="PostToTopLink">') != -1:
+            body = body[:body.find('<div class="PostToTopLink">')]
         if body.find('<hr class="PostHR">') != -1:
             body = body[:body.find('<hr class="PostHR">')]
         body = body.replace("<br>","NEWLINE")

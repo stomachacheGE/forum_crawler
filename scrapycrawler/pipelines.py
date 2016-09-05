@@ -10,6 +10,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_initialize import *
 
+import requests
+from datetime import datetime
+
 class ScrapycrawlerPipeline(object):
 
     def __init__(self, db_path):
@@ -70,14 +73,15 @@ class ScrapycrawlerPipeline(object):
             if not self.post_duplicate(item, author):
                 if item['author']['forum'] == 'healing well':
                     new_post = Post(user_id=author.id, thread_id=thread.id, url=item['url'],
-                                    body=item['body'], timestamp=item['timestamp'], forum=item['author']['forum'],)
+                                    body=item['body'], timestamp=item['timestamp'], forum=item['author']['forum'])
+                    self.check_time_span(new_post, thread)
                 elif item['author']['forum'] == 'prostatakrebs':
                     new_post = Post(user_id=author.id, thread_id=thread.id, url=item['url'],
                                     body=item['body'], timestamp=item['timestamp'], order_of_reply=item['order_of_reply'],
                                     subforum=item['subforum'], subforum_url=item['subforum_url'], forum=item['author']['forum'])
+                    self.check_time_span(new_post, thread)
                 else:
                     pass
-
                 self.session.add(new_post)
                 self.session.commit()
         else:
@@ -96,3 +100,16 @@ class ScrapycrawlerPipeline(object):
     def thread_duplicate(self, thread):
         get_thread = self.session.query(Thread).filter_by(url=thread['url']).first()
         return True if get_thread else False
+
+    def check_time_span(self, post, thread):
+        thread_time = datetime.strptime(thread.timestamp, '%Y-%m-%d %H:%M:%S')
+        reply_time = datetime.strptime(post.timestamp, '%Y-%m-%d %H:%M:%S')
+        time_delta = reply_time - thread_time
+        #print(time_delta)
+        #calculate the time span in hours
+        time_span = 24*int(time_delta.days) + time_delta.seconds//3600
+        if time_span < 0:
+            req = requests.get(url=post.url)
+            with open(("./wrong_time_span/%d.html" % post.thread_id), "w") as text_file:
+                print(req.text)
+                text_file.write(req.text)
