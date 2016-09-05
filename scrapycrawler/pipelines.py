@@ -110,6 +110,6 @@ class ScrapycrawlerPipeline(object):
         time_span = 24*int(time_delta.days) + time_delta.seconds//3600
         if time_span < 0:
             req = requests.get(url=post.url)
-            with open(("./wrong_time_span/%d.html" % post.thread_id), "w") as text_file:
+            with open(("./wrong_time_span/%d_%d.html" % (post.thread_id, post.id)), "w") as text_file:
                 print(req.text)
                 text_file.write(req.text)
