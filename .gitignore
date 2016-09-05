@@ -1,8 +1,9 @@
 *.db
 .*
 __pycache__/
-*/__pychache__/
+*/__pycache__/
 *.tex
 *.npy
 *.csv
 *.pdf
+*/*/__pycache__/
