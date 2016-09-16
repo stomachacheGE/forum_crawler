@@ -21,7 +21,7 @@ for i in range(1, num_post+1):
     post = session.query(Post).get(i)
     post_word_count[0,i-1] = word_count(post.body)
     if i%30==0:
-        print("Processing %d/%d" % (i, num_post))
+        print("Processing %d/%d post word count" % (i, num_post))
 print("Saving to file..")
-np.save("post_word_count", post_word_count)
+np.save("outputs/post_word_count_krebs", post_word_count)
 session.close()

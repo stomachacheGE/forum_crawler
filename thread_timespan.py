@@ -33,7 +33,7 @@ for i in range(1, num_thread+1):
     thread = session.query(Thread).get(i)
     thread_timespan[0,i-1] = get_time_span(thread)
     if i%30==0:
-        print("Processing %d/%d" % (i, num_thread))
+        print("Processing %d/%d time span" % (i, num_thread))
 print("Saving to file..")
-np.save("thread_timespan", thread_timespan)
+np.save("outputs/thread_timespan_krebs", thread_timespan)
 session.close()

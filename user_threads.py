@@ -17,10 +17,10 @@ user_posts = np.empty([1, num_user],dtype="int32")
 #post_posts = np.array([len(post.posts) for post in posts])
 for i in range(1, num_user+1):
     user = session.query(User).get(i)
-    user_posts[0,i-1] = len(user.threads) + len(user.posts)
+    user_posts[0,i-1] = len(user.threads)
     if i%30==0:
-        print("Processing %d/%d user posts" % (i, num_user))
+        print("Processing %d/%d user threads" % (i, num_user))
 print("Saving to file..")
-np.save("outputs/user_posts_krebs", user_posts)
+np.save("outputs/user_threads_krebs", user_posts)
 session.close()
 

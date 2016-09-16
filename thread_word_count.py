@@ -21,7 +21,7 @@ for i in range(1, num_thread+1):
     thread = session.query(Thread).get(i)
     thread_word_count[0,i-1] = word_count(thread.body)
     if i%30==0:
-        print("Processing %d/%d" % (i, num_thread))
+        print("Processing %d/%d thread word count" % (i, num_thread))
 print("Saving to file..")
-np.save("thread_word_count", thread_word_count)
+np.save("outputs/thread_word_count_krebs", thread_word_count)
 session.close()
