@@ -20,6 +20,6 @@ for i in range(1, num_thread+1):
     if i%2==0:
         print("%d/%d thread posts" % (i,num_thread))
 print("Saving to file..")
-np.save("outputs/thread_posts_krebs", user_posts)
+np.save("outputs/thread_posts_krebs", thread_posts)
 session.close()
 

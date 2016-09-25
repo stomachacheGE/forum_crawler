@@ -1,4 +1,7 @@
 outputs/
+*.numbers
+data/
+lists/
 *.db
 .*
 __pycache__/

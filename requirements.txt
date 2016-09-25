@@ -4,6 +4,8 @@ scrapy
 beautifulsoup4
 alembic
 html2text
+scipy
+scikit-learn
 matplotlib2tikz
 numpy
 ipykernel==4.2.2
