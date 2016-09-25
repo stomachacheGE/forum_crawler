@@ -4,7 +4,6 @@ scrapy
 beautifulsoup4
 alembic
 html2text
-matplotlib
 scipy
 scikit-learn
 matplotlib2tikz
