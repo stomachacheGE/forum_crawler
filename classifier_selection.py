@@ -40,11 +40,12 @@ for key in data['feature'][0].keys():
 # In[75]:
 
 from sklearn.grid_search import GridSearchCV
+from sklearn.preprocessing import MinMaxScaler
 import csv
 import os.path
 from sklearn import preprocessing
 def grid_search(clf, features_dict_list, target, param_grid, cv=None, 
-                scoring=None, feature_scaled=False, output=True, output_file=None):
+                scoring=None, feature_scaled=False, output=True, output_file=None, minmax=False):
     if not cv:
         cv = 10
     if not scoring:
@@ -54,9 +55,12 @@ def grid_search(clf, features_dict_list, target, param_grid, cv=None,
     features = np.array([list(feature.values()) for feature in features_dict_list])
     if feature_scaled:
         features = preprocessing.scale(features)
+    if minmax:
+        scaler = MinMaxScaler()
+        features = scaler.fit_transform(features)
     feature_names = ', '.join(features_dict_list[0].keys())
     gs_clf = GridSearchCV(estimator=clf, param_grid=param_grid,
-                   n_jobs=-1, cv=cv,scoring=scoring,verbose=10)
+                   n_jobs=-1, cv=cv,scoring=scoring)
     gs_clf.fit(features, target)
     grid_scores = gs_clf.grid_scores_
     # write training data to .csv
