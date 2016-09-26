@@ -187,11 +187,11 @@ for subset in subsets:
         subset_feature.append({k:feature[k] for k in subset})
     subset_feature = np.array(subset_feature)
     print(subset)
-    grid_search(GNB,data['feature'],data['sentiment'], {}, output_file = 'data/naive_bayes_classifier_selection.csv')
-    grid_search(GNB,data['feature'],data['sentiment'], {},
+    grid_search(GNB,subset_feature,data['sentiment'], {}, output_file = 'data/naive_bayes_classifier_selection.csv')
+    grid_search(GNB,subset_feature,data['sentiment'], {},
                 output_file = 'data/naive_bayes_classifier_selection.csv', feature_scaled=True)
 
-                from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import MultinomialNB
 alphas = np.logspace(-3, 1, 20)
 MNB = MultinomialNB()
 
@@ -201,6 +201,6 @@ for subset in subsets:
         subset_feature.append({k:feature[k] for k in subset})
     subset_feature = np.array(subset_feature)
     print(subset)
-    grid_search(MNB,data['feature'],data['sentiment'], dict(alpha=alphas), output_file = 'data/naive_bayes_classifier_selection.csv')
-    grid_search(MNB,data['feature'],data['sentiment'], dict(alpha=alphas),
+    grid_search(MNB,subset_feature,data['sentiment'], dict(alpha=alphas), output_file = 'data/naive_bayes_classifier_selection.csv')
+    grid_search(MNB,subset_feature,data['sentiment'], dict(alpha=alphas),
                 output_file = 'data/naive_bayes_classifier_selection.csv', feature_scaled=True)
