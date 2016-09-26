@@ -201,6 +201,7 @@ for subset in subsets:
         subset_feature.append({k:feature[k] for k in subset})
     subset_feature = np.array(subset_feature)
     print(subset)
-    grid_search(MNB,subset_feature,data['sentiment'], dict(alpha=alphas), output_file = 'data/naive_bayes_classifier_selection.csv')
+    grid_search(MNB,subset_feature,data['sentiment'], dict(alpha=alphas), minmax=True,
+                output_file = 'data/naive_bayes_classifier_selection.csv')
     grid_search(MNB,subset_feature,data['sentiment'], dict(alpha=alphas),
-                output_file = 'data/naive_bayes_classifier_selection.csv', feature_scaled=True)
+                output_file = 'data/naive_bayes_classifier_selection.csv', minmax=True,feature_scaled=True)
