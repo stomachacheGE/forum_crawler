@@ -60,7 +60,7 @@ def grid_search(clf, features_dict_list, target, param_grid, cv=None,
     gs_clf.fit(features, target)
     grid_scores = gs_clf.grid_scores_
     # write training data to .csv
-    file_exist = os.path.isfile(output) 
+    file_exist = os.path.isfile(output_file) 
     if not file_exist and output:
         with open(output_file, 'w') as csvfile:
             writer = csv.writer(csvfile)
@@ -151,20 +151,35 @@ subsets.pop(0)
 
 # In[77]:
 
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.tree import DecisionTreeClassifier
+# from sklearn.ensemble import AdaBoostClassifier
+# from sklearn.tree import DecisionTreeClassifier
 
-base_estimators = [DecisionTreeClassifier(max_depth=1),
-                   DecisionTreeClassifier(max_depth=2),
-                   DecisionTreeClassifier(max_depth=3)]
-n_estimators = np.linspace(1,20,10).astype(int)
-# Create and fit an AdaBoosted decision tree
-bdt = AdaBoostClassifier(learning_rate = 0.1)
+# base_estimators = [DecisionTreeClassifier(max_depth=1),
+#                    DecisionTreeClassifier(max_depth=2),
+#                    DecisionTreeClassifier(max_depth=3)]
+# n_estimators = np.linspace(1,20,10).astype(int)
+# # Create and fit an AdaBoosted decision tree
+# bdt = AdaBoostClassifier(learning_rate = 0.1)
 
 
-# In[78]:
+# # In[78]:
 
-#clf = grid_search(bdt,data['feature'],data['sentiment'],dict(base_estimator=base_estimators,n_estimators=n_estimators), cv=10, feature_scaled=True,output=False)
+# #clf = grid_search(bdt,data['feature'],data['sentiment'],dict(base_estimator=base_estimators,n_estimators=n_estimators), cv=10, feature_scaled=True,output=False)
+
+# for subset in subsets:
+#     subset_feature = []
+#     for feature in data['feature']:
+#         subset_feature.append({k:feature[k] for k in subset})
+#     subset_feature = np.array(subset_feature)
+#     print(subset)
+#     grid_search(bdt,subset_feature,data['sentiment'], output_file = 'data/adaboost_classifier_selection.csv',
+#                 param_grid=dict(base_estimator=base_estimators,n_estimators=n_estimators))
+#     grid_search(bdt,subset_feature,data['sentiment'], output_file = 'data/adaboost_classifier_selection.csv',
+#                 param_grid=dict(base_estimator=base_estimators,n_estimators=n_estimators),feature_scaled=True)
+
+from sklearn.naive_bayes import GaussianNB
+
+GNB = GaussianNB()
 
 for subset in subsets:
     subset_feature = []
@@ -172,7 +187,20 @@ for subset in subsets:
         subset_feature.append({k:feature[k] for k in subset})
     subset_feature = np.array(subset_feature)
     print(subset)
-    grid_search(bdt,subset_feature,data['sentiment'], output_file = 'data/adaboost_classifier_selection.csv',
-                param_grid=dict(base_estimator=base_estimators,n_estimators=n_estimators))
-    grid_search(bdt,subset_feature,data['sentiment'], output_file = 'data/adaboost_classifier_selection.csv',
-                param_grid=dict(base_estimator=base_estimators,n_estimators=n_estimators),feature_scaled=True)
+    grid_search(GNB,data['feature'],data['sentiment'], {}, output_file = 'data/naive_bayes_classifier_selection.csv')
+    grid_search(GNB,data['feature'],data['sentiment'], {},
+                output_file = 'data/naive_bayes_classifier_selection.csv', feature_scaled=True)
+
+                from sklearn.naive_bayes import MultinomialNB
+alphas = np.logspace(-3, 1, 20)
+MNB = MultinomialNB()
+
+for subset in subsets:
+    subset_feature = []
+    for feature in data['feature']:
+        subset_feature.append({k:feature[k] for k in subset})
+    subset_feature = np.array(subset_feature)
+    print(subset)
+    grid_search(MNB,data['feature'],data['sentiment'], dict(alpha=alphas), output_file = 'data/naive_bayes_classifier_selection.csv')
+    grid_search(MNB,data['feature'],data['sentiment'], dict(alpha=alphas),
+                output_file = 'data/naive_bayes_classifier_selection.csv', feature_scaled=True)
